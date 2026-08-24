@@ -1,0 +1,27 @@
+[
+  {
+    "url": "https://github.com/xiankeju-eng/c-scavenger-promo",
+    "channel": "GitHub仓库",
+    "owner": "你"
+  },
+  {
+    "url": "https://www.bilibili.com",
+    "channel": "B站主页",
+    "owner": "你"
+  },
+  {
+    "url": "https://www.zhihu.com",
+    "channel": "知乎主页",
+    "owner": "你"
+  },
+  {
+    "url": "https://item.taobao.com",
+    "channel": "淘宝商品页",
+    "owner": "你"
+  },
+  {
+    "url": "https://nonexistent-promo-demo.invalid/link",
+    "channel": "示例失效链接",
+    "owner": "demo"
+  }
+]
