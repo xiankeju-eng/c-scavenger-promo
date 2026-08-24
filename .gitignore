@@ -1,0 +1,16 @@
+# ===== 凭据（绝不提交）=====
+github_pat.txt
+*.pat
+*.token
+
+# ===== 用户私有数据（勿提交真实链接/销售数据）=====
+promo_links.json
+conversion_data.csv
+
+# ===== 运行产物 =====
+reports/
+link_state.json
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
