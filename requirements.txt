@@ -1,0 +1,6 @@
+# Python 依赖列表
+# C-Scavenger 使用标准库，无需额外依赖
+# 仅在打包时需要 PyInstaller
+
+# 打包工具（可选）
+pyinstaller>=5.0

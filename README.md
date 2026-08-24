@@ -1,51 +1,163 @@
-# c-scavenger-promo
+# C-Scavenger 🧹
 
-> C盘清理大师（净盘侠）· 推广链接监控与产品方案
+一个简单易用的 C 盘清理工具，专门针对 Windows 系统的垃圾文件和缓存清理。
 
-本仓库收录「净盘侠 · C盘清理大师」这款 Windows C 盘清理工具的产品方案，以及一套**推广链接自动化监控脚本**。
+## 功能特性 ✨
 
-> 说明：本仓库**不含**清理工具的可执行程序/源码，仅包含产品规划文档与营销侧的自动化工具。
+- 🧹 **清理临时文件** - 删除 %TEMP% 和系统临时文件夹中的文件
+- 🗑️ **清空回收站** - 一键清空 Windows 回收站
+- 🌐 **清理浏览器缓存** - 支持 Chrome、Edge、Firefox、IE
+- 📋 **清理系统日志** - 删除系统日志和崩溃转储
+- 💾 **清理其他缓存** - 清理 Windows 系统缓存和更新文件
+- 🚀 **全面清理** - 一键执行所有清理操作
+- 👥 **简单易用** - 交互式菜单界面，无需命令行知识
 
-## 目录结构
+## 快速开始 🚀
 
-| 文件 | 说明 |
-|------|------|
-| `推广监控自动化_产品方案.md` | 产品方案（名称/功能/平台/渠道/支付/授权/推广链接类型）+ 推广监控自动化任务清单 T1–T9 |
-| `promo_link_automation.py` | 推广链接监控脚本：抓取并分类链接、检测 HTTP 有效性、汇总渠道转化、生成周报（纯标准库，无需 pip） |
-| `promo_links.json` | 推广链接清单（首次运行自动生成模板，**请勿提交真实链接**） |
-| `conversion_data.csv` | 各渠道转化数据（访问/订单/营收，手动或后台导出，**请勿提交**） |
-| `.github/workflows/weekly-report.yml` | GitHub Actions 工作流：每周一 09:00（北京时间）自动跑监控并发布周报 Issue |
-| `examples/` | 示例数据源（演示用，链接为公开站点 + 失效样例，**不含真实销售数据**） |
-| `reports/` | 自动生成的监控报表 |
+### 方式一：直接运行 Python 脚本（推荐用于开发）
 
-## 快速开始
+**前提条件：**
+- 已安装 Python 3.6+
+- 使用管理员权限运行
 
+**步骤：**
 ```bash
-# 1. 安装 Python 3.8+（脚本仅用标准库，无需 pip install）
-# 2. 维护数据源
-#    - 编辑 promo_links.json，填入你的真实推广链接
-#    - 维护 conversion_data.csv（字段：channel,visits,orders,revenue）
-# 3. 运行
-python promo_link_automation.py --report weekly
-# 报表输出到 reports/report_weekly_YYYYMMDD.md
+python main.py
 ```
 
-## 自动化
+### 方式二：使用 .exe 可执行文件（推荐用于普通用户）
 
-脚本可接入定时任务（如 WorkBuddy 自动化 / cron / Windows 任务计划程序），每周自动抓取各推广链接、检测失效、汇总转化并生成报表。
+**前提条件：**
+- Windows 系统
+- 管理员权限
 
-### GitHub Actions 自动周报
+**步骤：**
+1. 下载最新的 `C-Scavenger.exe`
+2. 双击运行即可
+3. 选择清理选项
 
-仓库内置 `.github/workflows/weekly-report.yml`，**每周一 09:00（北京时间）**自动运行监控脚本，并把报表作为 Issue 发布（标签 `weekly-report` / `automated`）。
+## 使用方法 📖
 
-- **开箱即跑**：默认使用 `examples/` 下的示例数据演示完整流程（含一个 `.invalid` 失效链接，用于验证异常检测）。
-- **接入真实数据**（推荐）：在仓库 **Settings → Secrets and variables → Actions → New repository secret** 添加：
-  - `PROMO_LINKS_JSON`：你的 `promo_links.json` 完整内容（JSON 字符串）
-  - `CONVERSION_CSV`：你的 `conversion_data.csv` 完整内容
-  - 设好后工作流自动改用真实数据，示例数据不再生效。
-- **手动触发**：Actions 页面 → 该工作流 → **Run workflow**，可随时立即跑一次。
-- 报表同时写入 Job Summary，并在 Issues 中留存，方便追溯每周渠道健康度与转化。
+1. **启动程序**
+   - 运行 `main.py` 或 `C-Scavenger.exe`
+   - 如果没有管理员权限，程序会自动请求提升权限
 
-## 许可
+2. **选择清理选项**
+   ```
+   1. 清理临时文件
+   2. 清空回收站
+   3. 清理浏览器缓存
+   4. 清理系统日志
+   5. 清理其他缓存
+   6. 执行全面清理（推荐）
+   0. 退出程序
+   ```
 
-文档与脚本以 MIT 许可开源，供学习与二次开发使用。
+3. **等待清理完成**
+   - 程序会显示删除的文件数
+   - 某些文件可能因被占用而无法删除（程序会自动跳过）
+
+## 打包成 .exe 📦
+
+将 Python 脚本打包成独立的 .exe 文件，实现 U 盘即插即用：
+
+### 安装 PyInstaller
+```bash
+pip install pyinstaller
+```
+
+### 打包命令
+```bash
+pyinstaller --onefile --windowed --icon=icon.ico --name="C-Scavenger" main.py
+```
+
+打包后的 .exe 文件位于 `dist` 文件夹中。
+
+## U 盘使用说明 🔌
+
+1. **准备 U 盘**
+   - 将 `dist/C-Scavenger.exe` 复制到 U 盘
+   - 可选：添加 `README.txt` 说明文件
+
+2. **使用**
+   - 将 U 盘插入任何 Windows 电脑
+   - 双击 `C-Scavenger.exe`
+   - 选择清理选项即可
+
+3. **优势**
+   - ✅ 无需安装任何软件
+   - ✅ 不依赖 Python 环境
+   - ✅ 完全绿色软件
+   - ✅ 可在任何 Windows 电脑上运行
+
+## 注意事项 ⚠️
+
+- **管理员权限** - 程序必须以管理员身份运行才能清理系统文件
+- **文件占用** - 正在使用中的文件无法删除，程序会自动跳过
+- **备份建议** - 首次运行建议先备份重要数据
+- **浏览器关闭** - 清理浏览器缓存前请关闭浏览器
+- **系统稳定** - 不会删除系统关键文件，安全可靠
+
+## 文件大小预期 📊
+
+一次全面清理通常可以清理出：
+- 临时文件：100MB - 500MB
+- 浏览器缓存：100MB - 2GB
+- 系统日志：50MB - 200MB
+- 其他缓存：50MB - 500MB
+
+## 开发和贡献 🛠️
+
+### 项目结构
+```
+c-scavenger-promo/
+├── main.py           # 主程序
+├── README.md         # 使用说明（本文件）
+├── requirements.txt  # Python 依赖
+├── build.bat         # Windows 打包脚本
+└── dist/             # 输出目录
+    └── C-Scavenger.exe
+```
+
+### 依赖
+- Python 3.6+
+- 无额外 Python 依赖（使用标准库）
+
+### 编译（打包）
+```bash
+# Windows 用户可直接运行
+build.bat
+
+# 或使用命令行
+pyinstaller --onefile --windowed --name="C-Scavenger" main.py
+```
+
+## 常见问题 ❓
+
+**Q: 程序要求管理员权限？**
+A: 是的，清理系统文件需要管理员权限。程序会自动请求提升权限。
+
+**Q: 可以在 Mac 或 Linux 上运行吗？**
+A: 不能。本程序专门为 Windows 设计，使用了 Windows 特定的 API。
+
+**Q: 误删的文件可以恢复吗？**
+A: 可以。Windows 会将删除的文件移到回收站。如果需要，可以从回收站恢复。
+
+**Q: 程序会删除我的重要文件吗？**
+A: 不会。程序只清理特定位置的缓存和临时文件，不会删除用户文档或程序安装文件。
+
+**Q: 清理后电脑会变快吗？**
+A: 可能会。释放出的硬盘空间可能会提高系统性能，尤其是 C 盘空间不足的情况下。
+
+## 许可证 📜
+
+MIT License - 自由使用和修改
+
+## 联系方式 📧
+
+如有问题或建议，欢迎提交 Issue 或 Pull Request。
+
+---
+
+**最后更新：** 2026年8月24日
+**版本：** 1.0.0

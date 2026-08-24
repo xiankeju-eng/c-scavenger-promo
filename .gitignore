@@ -1,16 +1,45 @@
-# ===== 凭据（绝不提交）=====
-github_pat.txt
-*.pat
-*.token
+# Git ignore rules for C-Scavenger project
 
-# ===== 用户私有数据（勿提交真实链接/销售数据）=====
-promo_links.json
-conversion_data.csv
-
-# ===== 运行产物 =====
-reports/
-link_state.json
+# Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
+
+# Project specific
+*.log
+*.tmp
+temp/
+cache/
+
+# OS
+Thumbs.db
+.directory
