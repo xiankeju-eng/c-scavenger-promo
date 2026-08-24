@@ -1,0 +1,68 @@
+name: 推广链接周报 (Weekly Promo Monitor)
+
+# 触发：每周一 09:00 北京时间 = UTC 每周一 01:00；也支持手动触发
+on:
+  schedule:
+    - cron: '0 1 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  weekly-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 准备数据源（优先 Secret，否则示例）
+        shell: bash
+        run: |
+          mkdir -p reports
+          if [ -n "${{ secrets.PROMO_LINKS_JSON }}" ]; then
+            printf '%s' "${{ secrets.PROMO_LINKS_JSON }}" > promo_links.json
+            echo "✅ 使用 Secret 中的真实推广链接"
+          else
+            cp examples/promo_links.example.json promo_links.json
+            echo "ℹ️ 使用示例推广链接（设置 PROMO_LINKS_JSON Secret 可切换为真实数据）"
+          fi
+          if [ -n "${{ secrets.CONVERSION_CSV }}" ]; then
+            printf '%s' "${{ secrets.CONVERSION_CSV }}" > conversion_data.csv
+            echo "✅ 使用 Secret 中的转化数据"
+          else
+            cp examples/conversion_data.example.csv conversion_data.csv
+            echo "ℹ️ 使用示例转化数据（设置 CONVERSION_CSV Secret 可切换为真实数据）"
+          fi
+
+      - name: 运行监控脚本
+        run: python promo_link_automation.py --report weekly
+
+      - name: 定位并展示报表
+        id: locate
+        run: |
+          REPORT=$(ls -t reports/report_weekly_*.md | head -n 1)
+          echo "path=$REPORT" >> "$GITHUB_OUTPUT"
+          cat "$REPORT" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 创建周报 Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = '${{ steps.locate.outputs.path }}';
+            const body = fs.readFileSync(path, 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📊 推广链接周报 ${new Date().toISOString().slice(0, 10)}`,
+              body: body,
+              labels: ['weekly-report', 'automated']
+            });
